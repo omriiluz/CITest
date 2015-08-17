@@ -1,6 +1,4 @@
 machine:
-  environment:
-    VER: 1$(git describe --tags --abbrev=1)
   services:
     - docker
 
@@ -9,8 +7,8 @@ deployment:
     branch: master
     commands:
       - docker info
-      - echo building tag $VER
-      - docker build -t omriiluz/citest:$VER .
-      - docker tag omriiluz/citest:$VER omriiluz/citest:latest
+      - echo building tag $(git describe --tags --abbrev=1)
+      - VER=$(git describe --tags --abbrev=1) docker build -t omriiluz/citest:$(git describe --tags --abbrev=1) .
+      - docker tag omriiluz/citest:$(git describe --tags --abbrev=1) omriiluz/citest:latest
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push omriiluz/citest
